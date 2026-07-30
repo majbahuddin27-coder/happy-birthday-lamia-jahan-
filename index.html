@@ -2,49 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOX | Celestial Kinetics</title>
-    <meta name="description" content="A high-performance, realistic HTML5 Canvas fireworks simulation, optimized for visual quality and user experience.">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Lamia Jahan Juthy (Evana)</title>
     <style>
-        /* --- Reset & Basics --- */
+        /* --- RESET & BASICS --- */
         *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-deep: #050505;
-            --text-primary: #ffffff;
-            --text-muted: #888888;
-        }
-
         body, html {
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Prevent scrollbars */
-            background-color: var(--bg-deep);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: var(--text-primary);
-            overscroll-behavior: none; /* Prevent pull-to-refresh glow on mobile */
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: white;
+            cursor: none; /* Custom cursor implemented */
         }
 
-        /* --- Canvas Layer --- */
-        canvas {
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* Below UI */
-            cursor: crosshair;
-        }
-
-        /* --- UI Overlay Layer --- */
-        .ui-container {
-            position: absolute;
+        /* --- INTRO SCREEN --- */
+        #intro-screen {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -53,424 +33,337 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            pointer-events: none; /* Let interactions pass through to canvas */
-            z-index: 10; /* Above Canvas */
-            mix-blend-mode: difference; /* Ensures text remains visible against colors */
-            padding-bottom: 10vh;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+            z-index: 1000;
+            transition: opacity 2s ease-in-out;
         }
 
-        .title {
-            font-size: 5rem;
-            font-weight: 900;
-            letter-spacing: -0.05em;
-            text-transform: uppercase;
+        #gift-box-container {
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 20px;
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInSlideUp 1s ease forwards 0.5s;
+            transform: translateY(30px);
+            animation: fadeInSlideUp 1s ease forwards 3s;
         }
 
-        .subtitle {
-            font-size: 1rem;
-            font-weight: 300;
-            color: var(--text-muted);
-            margin-top: 1rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            opacity: 0;
-            animation: fadeInSlideUp 1s ease forwards 0.7s;
+        .gift-box {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
         }
 
-        .controls-hint {
+        .gift-box:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+
+        .face {
             position: absolute;
-            bottom: 50px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            box-shadow: 0 0 20px rgba(255, 75, 43, 0.5);
+        }
+
+        .front  { transform: translateZ(75px); }
+        .back   { transform: rotateY(180deg) translateZ(75px); }
+        .right  { transform: rotateY(90deg) translateZ(75px); }
+        .left   { transform: rotateY(-90deg) translateZ(75px); }
+        .top    { transform: rotateX(90deg) translateZ(75px); height: 75px; top: -37.5px; background: linear-gradient(135deg, #ff6685, #ff7f66); }
+        .bottom { transform: rotateX(-90deg) translateZ(75px); height: 75px; bottom: -37.5px; }
+
+        .ribbon-h { position: absolute; top: 50%; left: 0; width: 100%; height: 20px; background: #ffd700; transform: translateY(-50%); }
+        .ribbon-v { position: absolute; top: 0; left: 50%; width: 20px; height: 100%; background: #ffd700; transform: translateX(-50%); }
+        .bow { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 60px; height: 40px; background: #fff; clip-path: polygon(50% 0%, 100% 30%, 80% 100%, 20% 100%, 0% 30%); }
+
+        #intro-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
             opacity: 0;
-            animation: fadeIn 2s ease forwards 2s; /* Delayed instructions */
+            animation: fadeIn 1s ease forwards 3.5s;
+            background: linear-gradient(to right, #fff, #ffcccc, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 300;
+            letter-spacing: 1px;
         }
 
-        /* --- Animations --- */
+        .open-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards 4s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .open-btn:hover {
+            background: rgba(255, 75, 43, 0.8);
+            box-shadow: 0 0 20px rgba(255, 75, 43, 0.5);
+            border-color: rgba(255, 75, 43, 0.8);
+            transform: translateY(-2px);
+        }
+
+        /* --- MAIN EXPERIENCE --- */
+        #main-experience {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* Hidden initially */
+            z-index: 100;
+            perspective: 1000px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #scene-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+        }
+
+        #message-box {
+            text-align: center;
+            opacity: 0;
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-width: 80%;
+            transform: translateZ(100px) scale(0.8);
+            transition: opacity 2s ease, transform 2s ease;
+        }
+
+        #message-box.show {
+            opacity: 1;
+            transform: translateZ(100px) scale(1);
+        }
+
+        #main-title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ffcc);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s linear infinite;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        #main-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #eee;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- HUD ELEMENTS --- */
+        #hud {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            pointer-events: none; /* Let clicks pass through to canvas */
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 1s ease 5s;
+        }
+
+        #hud.show { opacity: 1; }
+
+        .hud-box {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .value { font-size: 1.2rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+        #clock-box { text-align: left; }
+        #countdown-box { text-align: center; }
+        #cake-box { text-align: right; cursor: pointer; pointer-events: auto; } /* Wish button interactive */
+
+        #cake-icon { font-size: 2rem; margin-bottom: 5px; display: block; }
+        
+        #wish-btn {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            pointer-events: auto;
+        }
+        #wish-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,75,43,0.4); }
+
+        /* --- CUSTOM CURSOR --- */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 75, 43, 0.8);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 15px rgba(255, 75, 43, 0.8), 0 0 30px rgba(255, 75, 43, 0.4);
+            transition: transform 0.1s ease, background 0.3s ease;
+            mix-blend-mode: screen;
+        }
+
+        #cursor.click {
+            transform: scale(2);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- ANIMATIONS KEYFRAMES --- */
         @keyframes fadeInSlideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        @keyframes fadeIn {
-            to { opacity: 0.6; }
-        }
-
-        /* --- Mobile Responsiveness --- */
+        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 768px) {
-            .title { font-size: 3rem; }
-            .subtitle { font-size: 0.8rem; letter-spacing: 0.15em; }
-            .controls-hint { font-size: 0.7rem; bottom: 30px; }
+            #main-title { font-size: 2.5rem; }
+            #main-subtitle { font-size: 1.1rem; padding: 0 10px; }
+            #hud { flex-direction: column; align-items: center; gap: 15px; bottom: 10px; left: 10px; right: 10px; }
+            .hud-box { width: 100%; text-align: center; }
+            #cake-box { text-align: center; }
+            #intro-text { font-size: 1.1rem; padding: 0 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- The UI Overlay -->
-    <div class="ui-container">
-        <h1 class="title">NOX</h1>
-        <p class="subtitle">Celestial Kinetics</p>
-        <div class="controls-hint">Click or Touch Anywhere</div>
+    <!-- Audio Placeholder -->
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        <!-- Your browser does not support the audio element. -->
+    </audio>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+
+    <!-- Intro Screen -->
+    <div id="intro-screen">
+        <div id="gift-box-container">
+            <div class="gift-box" onclick="openGift()">
+                <div class="face front">🎁</div>
+                <div class="face back">🎁</div>
+                <div class="face right">🎁</div>
+                <div class="face left">🎁</div>
+                <div class="face top"><div class="bow"></div></div>
+                <div class="face bottom"></div>
+                <div class="ribbon-h"></div>
+                <div class="ribbon-v"></div>
+            </div>
+        </div>
+        <div id="intro-text">Someone Special Has a Surprise Waiting...</div>
+        <button class="open-btn" onclick="openGift()">Open My Gift ❤️</button>
     </div>
 
-    <!-- The Canvas Element -->
-    <canvas id="fireworks-canvas"></canvas>
-
-    <!-- The Core Application Script -->
-    <script>
-        /**
-         * NOX | Celestial Kinetics
-         * A high-performance ES6 Canvas application.
-         */
-
-        // --- Configuration & Constants ---
-        const CONFIG = {
-            gravity: 0.07,          // Simulated gravity (scaled per tick)
-            airFriction: 0.96,      // Slows particles over time
-            baseLife: 200,          // Base lifespan of particles
-            lifeVariance: 50,       // Random addition to lifespan
-            particleCount: 150,     // Particles per explosion
-            launchSpeed: 12,        // Speed of rocket moving up
-            rocketTrailCount: 8,    // Length of rocket launch trail
-            colorFlicker: true,     // If particles shift brightness slightly
-            autoLaunchInterval: 1500 // ms between background launches
-        };
-
-        // --- Canvas Setup ---
-        const canvas = document.getElementById('fireworks-canvas');
-        const ctx = canvas.getContext('2d', { alpha: true }); // Optimize context
-
-        let width, height, dpr;
-
-        function adjustCanvasSize() {
-            dpr = window.devicePixelRatio || 1;
-            width = window.innerWidth;
-            height = window.innerHeight;
-
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
-            
-            // Normalize coordinate system to use logical pixels
-            ctx.scale(dpr, dpr);
-            
-            // Set default styles once
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-        }
-
-        // Handle Resize efficiently
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(adjustCanvasSize, 100);
-        });
-
-        adjustCanvasSize();
-
-
-        // --- Physics Math Helpers ---
-        const random = (min, max) => Math.random() * (max - min) + min;
+    <!-- Main Experience -->
+    <div id="main-experience">
+        <canvas id="bg-canvas"></canvas>
+        <canvas id="particle-canvas"></canvas>
         
-        // Fast distance calc (no sqrt) for proximity checks if needed later
-        const getDistanceSq = (x1, y1, x2, y2) => (x1-x2)**2 + (y1-y2)**2;
+        <div id="scene-container">
+            <div id="message-box">
+                <h1 id="main-title">Happy Birthday<br>Lamia Jahan Juthy (Evana)</h1>
+                <p id="main-subtitle">
+                    You are the most beautiful chapter of my life.<br><br>
+                    May your smile always stay this beautiful.<br>
+                    Thank you for existing.<br><br>
+                    <strong>Happy Birthday My Love ❤️</strong>
+                </p>
+            </div>
+        </div>
 
+        <div id="hud">
+            <div id="clock-box" class="hud-box">
+                <div class="label">Local Time</div>
+                <div id="live-clock" class="value">00:00:00</div>
+            </div>
+            <div id="countdown-box" class="hud-box">
+                <div class="label">Time until next year</div>
+                <div id="countdown-timer" class="value">00:00:00:00</div>
+            </div>
+            <div id="cake-box" class="hud-box">
+                <span id="cake-icon">🎂</span>
+                <button id="wish-btn" onclick="makeWish()">Make a Wish ✨</button>
+            </div>
+        </div>
+    </div>
 
-        // --- Classes ---
+    <script>
+        // --- UTILS & STATE ---
+        const PI2 = Math.PI * 2;
+        const random = (min, max) => Math.random() * (max - min) + min;
+        let width, height;
+        let animationId;
 
-        /**
-         * Represents a single glowing spark in an explosion.
-         */
-        class Particle {
-            constructor(x, y, hue) {
-                this.x = x;
-                this.y = y;
-                this.hue = hue;
+        // --- CUSTOM CURSOR LOGIC ---
+        const cursor = document.getElementById('cursor');
+        window.addEventListener('mousemove', e => {
+            cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+        });
+        window.addEventListener('mousedown', () => cursor.classList.add('click'));
+        window.addEventListener('mouseup', () => cursor.classList.remove('click'));
 
-                // Explosive velocity: random angle in full circle, random speed
-                const angle = Math.random() * Math.PI * 2;
-                const speed = random(0.5, 6);
-                
-                this.vx = Math.cos(angle) * speed;
-                this.vy = Math.sin(angle) * speed;
-
-                this.alpha = 1;
-                this.life = 0;
-                this.maxLife = CONFIG.baseLife + random(0, CONFIG.lifeVariance);
-                
-                // Physics properties used for realistic decay
-                this.friction = CONFIG.airFriction;
-                this.gravity = CONFIG.gravity;
-                
-                // Trail history buffer (stores last few positions)
-                this.history = []; 
-            }
-
-            update() {
-                // Apply Physics
-                this.vy += this.gravity;     // Accelerate down
-                this.vx *= this.friction;    // Slow horizontally
-                this.vy *= this.friction;    // Slow vertically
-
-                // Move position
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // Update Trail History
-                this.history.push({ x: this.x, y: this.y });
-                if (this.history.length > 7) { // Limit trail length
-                    this.history.shift();
-                }
-
-                // Age the particle
-                this.life++;
-                
-                // Fade out (starts fading aggressively in last 20% of life)
-                if (this.life > this.maxLife * 0.8) {
-                    const fadeProgress = (this.life - (this.maxLife * 0.8)) / (this.maxLife * 0.2);
-                    this.alpha = 1 - fadeProgress;
-                }
-            }
-
-            draw() {
-                if (this.alpha <= 0) return;
-
-                // PERFORMANCE: Use simpler drawing if alpha is very low
-                if (this.alpha < 0.1) return;
-
-                // VISUAL QUALITY: Additive blending creates intense light glow
-                ctx.globalCompositeOperation = 'lighter';
-                
-                // Draw the Core Particle
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
-                
-                // Optional flicker for realism
-                const lightness = CONFIG.colorFlicker ? random(50, 70) : 60;
-                ctx.fillStyle = `hsla(${this.hue}, 100%, ${lightness}%, ${this.alpha})`;
-                ctx.fill();
-
-                // Draw the Motion Trail
-                if (this.history.length >= 2) {
-                    ctx.beginPath();
-                    // Start at the oldest point in history
-                    ctx.moveTo(this.history[0].x, this.history[0].y);
-                    // Connect to all subsequent points
-                    for (let i = 1; i < this.history.length; i++) {
-                         ctx.lineTo(this.history[i].x, this.history[i].y);
-                    }
-                    
-                    // Trail is thinner and fainter than core
-                    ctx.strokeStyle = `hsla(${this.hue}, 100%, 80%, ${this.alpha * 0.3})`;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-
-                // Reset Composite Operation (Critical!)
-                ctx.globalCompositeOperation = 'source-over';
-            }
+        // --- AUDIO HANDLING ---
+        const audio = document.getElementById('bg-music');
+        function startAudio() {
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log("Audio play prevented by browser.", e));
         }
 
-        /**
-         * Represents the rocket shell launched from the bottom.
-         */
-        class Firework {
-            constructor(targetX, targetY) {
-                // Launch origin: bottom center of screen
-                this.x = width / 2;
-                this.y = height;
-
-                this.targetX = targetX;
-                // Add variance to target depth
-                this.targetY = targetY; 
-
-                // Calculate velocity vector
-                const dx = this.targetX - this.x;
-                const dy = this.targetY - this.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                this.vx = (dx / distance) * CONFIG.launchSpeed;
-                this.vy = (dy / distance) * CONFIG.launchSpeed;
-
-                this.exploded = false;
-                this.hue = random(0, 360); // Random color for this shell
-                
-                // Launch trail particles
-                this.trail = [];
-            }
-
-            update() {
-                if (this.exploded) return;
-
-                // Move rocket
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // Add point to launch trail
-                this.trail.push({ x: this.x, y: this.y, alpha: 1 });
-                if (this.trail.length > CONFIG.rocketTrailCount) {
-                    this.trail.shift();
-                }
-
-                // Check if target reached (or slightly past)
-                // Rocket explodes when it stops moving up (reaches apex)
-                // OR passes targetY (for user clicks)
-                if (this.vy >= 0 || this.y <= this.targetY) {
-                    this.explode();
-                }
-            }
-
-            draw() {
-                if (this.exploded) return;
-
-                // Draw Launch Trail
-                ctx.globalCompositeOperation = 'lighter';
-                for (let i = 0; i < this.trail.length; i++) {
-                    const p = this.trail[i];
-                    const trailAlpha = p.alpha * (i / this.trail.length); // Fade tail
-                    ctx.beginPath();
-                    // Rocket gets smaller toward tail end
-                    ctx.arc(p.x, p.y, i / 2, 0, Math.PI * 2); 
-                    ctx.fillStyle = `hsla(${this.hue}, 100%, 70%, ${trailAlpha})`;
-                    ctx.fill();
-                }
-                ctx.globalCompositeOperation = 'source-over';
-                
-                // Draw Main Rocket Head (White hot core)
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = 'white';
-                ctx.fill();
-            }
-
-            /**
-             * Generates particle array upon explosion.
-             */
-            createParticles() {
-                const particles = [];
-                for (let i = 0; i < CONFIG.particleCount; i++) {
-                    particles.push(new Particle(this.targetX, this.targetY, this.hue));
-                }
-                return particles;
-            }
-        }
-
-
-        // --- Global State ---
-        let fireworks = [];
-        let particles = [];
-        let isRunning = true;
-        let autoLaunchTimer;
-
-
-        // --- Core Loop ---
-
-        function loop() {
-            if (!isRunning) return;
-            requestAnimationFrame(loop);
-
-            // PERFORMANCE TRICK: Use destination-out to fade rather than clearRect
-            // This creates gorgeous trails behind everything.
-            ctx.globalCompositeOperation = 'destination-out';
-            // Adjust Alpha value for trail length (0.1 = long trails, 0.5 = short trails)
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.12)'; 
-            ctx.fillRect(0, 0, width, height);
-            ctx.globalCompositeOperation = 'source-over';
-
-            // Update & Draw Fireworks (Rockets moving up)
-            for (let i = 0; i < fireworks.length; i++) {
-                fireworks[i].update();
-                fireworks[i].draw();
-                
-                // If exploded, move particles to global array and remove firework
-                if (fireworks[i].exploded) {
-                    particles.push(...fireworks[i].createParticles());
-                    fireworks.splice(i, 1);
-                    i--;
-                }
-            }
-
-            // Update & Draw Particles (Explosions)
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                
-                // Remove dead particles
-                if (particles[i].alpha <= 0) {
-                    particles.splice(i, 1);
-                    i--;
-                }
-            }
-        }
-
-
-        // --- Interaction Handling ---
-
-        function launchFromInteraction(e) {
-            // Normalize clientX/Y for mouse and touch events
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            // Don't launch if clicking near top UI (though pointer-events is none)
-            if (clientY < 100) return;
-
-            fireworks.push(new Firework(clientX, clientY));
-        }
-
-        // Use mousedown/touchstart for immediate response
-        window.addEventListener('mousedown', launchFromInteraction);
-        window.addEventListener('touchstart', launchFromInteraction, { passive: true });
-
-
-        // --- Automated Background Launcher ---
-
-        function autoLaunch() {
-            if (!isRunning) return;
-            
-            // Launch randomly across the top 40% of screen
-            const targetX = random(width * 0.1, width * 0.9);
-            const targetY = random(height * 0.05, height * 0.4);
-            
-            fireworks.push(new Firework(targetX, targetY));
-
-            // Schedule next launch (vary timing)
-            autoLaunchTimer = setTimeout(autoLaunch, CONFIG.autoLaunchInterval + random(-500, 500));
-        }
-
-
-        // --- Initialization ---
-
-        function init() {
-            adjustCanvasSize();
-            
-            // Start animation loop
-            loop();
-            
-            // Start ambient background launches
-            autoLaunch();
-            
-            // Handle Visibility API to pause simulation when tab is inactive
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    isRunning = false;
-                    clearTimeout(autoLaunchTimer);
-                } else {
-                    isRunning = true;
-                    loop(); // Restart loop
-                    autoLaunch(); // Restart auto launcher
-                }
-            });
-        }
-
-        // Run on load
-        init();
-
-    </script>
-</body>
-</html>
+        // --- SCENE SETUP ---
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx =
