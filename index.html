@@ -2,359 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Birthday Lamia Jahan Juthy (Evana)</title>
-    <style>
-        /* --- RESET & BASICS --- */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-            --bg-deep: #050509;
-            --ガラス: rgba(255, 255, 255, 0.05);
-            --border-ガラス: rgba(255, 255, 255, 0.18);
-            --accent: #ff4757; /* Romantic Red */
-            --accent-glow: rgba(255, 71, 87, 0.5);
-            --text-main: #ffffff;
-            --text-muted: #ccc;
-            --font-heading: 'Playfair Display', Georgia, serif;
-            --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-        
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap');
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Grand Birthday Surprise!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: var(--font-body);
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+    <audio id="backgroundMusic" loop>
+        <source src="birthday_song.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-        /* --- SCENE CONTAINERS --- */
-        .scene {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1.5s ease-in-out, visibility 1.5s;
-            perspective: 1000px;
-        }
+    <div class="step active" id="step1">
+        <div class="welcome-card">
+            <h1 class="welcome-title">You've got a surprise!</h1>
+            <p class="welcome-message">Click below to start your birthday journey...</p>
+            <button id="startButton" class="action-button">Start the Celebration!</button>
+        </div>
+    </div>
 
-        .scene.active {
-            opacity: 1;
-            visibility: visible;
-        }
+    <div class="step" id="step2">
+        <div class="envelope-container" id="envelopeContainer">
+            <div class="envelope">
+                <div class="envelope-back"></div>
+                <div class="envelope-front"></div>
+                <div class="envelope-flap"></div>
+                <div class="envelope-seal"></div>
+            </div>
+            <p class="click-instruction">Click the envelope!</p>
+        </div>
+    </div>
 
-        /* --- BACKGROUND ELEMENTS --- */
-        #universe {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-        }
+    <div class="step" id="step3">
+        <div class="letter-container" id="letterContainer">
+            <div class="letter">
+                <p>Dearest [Name],</p>
+                <p>This message carries wishes straight from the heart, ready to unfold into a memorable celebration just for you.</p>
+                <p>Click the button to reveal your special birthday surprise!</p>
+                <button id="unfoldButton" class="action-button">Unfold My Surprise!</button>
+            </div>
+        </div>
+    </div>
 
-        #stars, #stars2, #stars3 {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            width: 100%; height: 100%;
-            display: block;
-        }
-        #stars { background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png') repeat top center; z-index: -1; animation: animStar 50s linear infinite; }
-        #stars2 { background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png') repeat top center; z-index: -1; background-size: 500px 500px; opacity: 0.5; animation: animStar 100s linear infinite; }
-        #stars3 { background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png') repeat top center; z-index: -1; background-size: 300px 300px; opacity: 0.3; animation: animStar 150s linear infinite; }
+    <div class="step" id="step4">
+        <div class="celebration-container">
+            <div class="fireworks-container"></div>
+            <div class="confetti-cannon-container"></div>
+            <div class="balloons-container"></div>
 
-        @keyframes animStar { from {transform: translateY(0px);} to {transform: translateY(-10000px);}}
+            <div class="celebration-card">
+                <p class="sub-greeting">To the amazing</p>
+                <h1 class="main-greeting typewriter-text" id="finalGreeting">Happy Birthday,</h1>
+                <h2 class="recipient-name">Sapthesh!</h2>
+                <div class="cake-container">
+                    <div class="cake">
+                        <div class="plate"></div>
+                        <div class="layer layer-bottom"></div>
+                        <div class="layer layer-middle"></div>
+                        <div class="layer layer-top"></div>
+                        <div class="icing"></div>
+                        <div class="drip drip1"></div>
+                        <div class="drip drip2"></div>
+                        <div class="drip drip3"></div>
+                        <div class="candle">
+                            <div class="flame" id="candleFlame"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="final-wish">May your special day be filled with immense joy, laughter, and all the wonderful things life has to offer. Here's to another year of amazing adventures!</p>
+                <p class="signature">With love and best wishes <span class="heart-icon"></span></p>
+            </div>
+        </div>
+    </div>
 
-        .aurora {
-            position: absolute;
-            bottom: -50%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(72, 52, 212, 0.3) 0%, rgba(126, 214, 223, 0.3) 50%, rgba(224, 86, 253, 0.3) 100%);
-            filter: blur(80px);
-            z-index: -1;
-            animation: auroraFloat 20s infinite alternate ease-in-out;
-            border-radius: 50% 50% 0 0;
-            opacity: 0.6;
-        }
-
-        @keyframes auroraFloat {
-            0% { transform: translateX(-25%) translateY(10%) scale(1); }
-            100% { transform: translateX(-15%) translateY(-10%) scale(1.1); }
-        }
-
-        /* Particle Container for background effects */
-        #particle-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* --- INTRO SCENE --- */
-        #intro-scene {
-            background-color: #000;
-            z-index: 10;
-        }
-
-        .intro-text {
-            font-family: var(--font-heading);
-            font-size: 3rem;
-            color: var(--text-main);
-            text-align: center;
-            padding: 20px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInOut 4s forwards;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-            line-height: 1.2;
-        }
-
-        .intro-text:nth-child(2) { animation-delay: 4.5s; }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(30px); }
-            25%, 75% { opacity: 1; transform: translateY(0px); }
-            100% { opacity: 0; transform: translateY(-30px); }
-        }
-
-        /* --- OPENING SCENE (GIFT BOX) --- */
-        #opening-scene {
-            background: radial-gradient(circle at center, #101015 0%, #050505 100%);
-        }
-
-        .gift-box-container {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease, filter 0.3s ease;
-            perspective: 1000px;
-        }
-
-        .gift-box-container:hover {
-            transform: scale(1.05);
-        }
-
-        .gift-box-container.opened {
-            pointer-events: none;
-        }
-
-        .box-body, .box-lid {
-            width: 200px;
-            height: 200px;
-            background: #c0392b; /* Premium Red */
-            border: 4px solid #fff;
-            border-radius: 15px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s;
-            position: absolute;
-            top: 0; left: 0;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .box-body {
-            z-index: 1;
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-        }
-
-        .box-lid {
-            z-index: 2;
-            transform-origin: top;
-            background: linear-gradient(135deg, #c0392b 0%, #96281b 100%);
-        }
-
-        .ribbon {
-            position: absolute;
-            background: #f1c40f; /* Gold */
-        }
-
-        .ribbon.vertical { width: 40px; height: 100%; top: 0; left: 80px; }
-        .ribbon.horizontal { width: 100%; height: 40px; top: 80px; left: 0; }
-        .bow {
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px; height: 60px;
-            background: #f1c40f;
-            border-radius: 25px 25px 5px 5px;
-            z-index: 3;
-        }
-        .bow::before, .bow::after {
-            content: '';
-            position: absolute;
-            width: 50px; height: 50px;
-            background: #f1c40f;
-            border-radius: 50%;
-            top: -10px;
-        }
-        .bow::before { left: -15px; }
-        .bow::after { right: -15px; }
-
-        /* Open State Animations */
-        .gift-box-container.opened .box-lid {
-            transform: rotateX(-110deg) translateY(-50px) translateX(-10px);
-            opacity: 0;
-        }
-
-        .click-instruction {
-            position: absolute;
-            bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: var(--font-body);
-            font-size: 1.1rem;
-            color: #fff;
-            background: rgba(255,255,255,0.1);
-            padding: 10px 20px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            pointer-events: none;
-            animation: pulse 2s infinite;
-            white-space: nowrap;
-        }
-
-        @keyframes pulse { 0% { opacity: 0.7; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.05); } 100% { opacity: 0.7; transform: translateX(-50%) scale(1); } }
-
-        /* --- MAIN BIRTHDAY SCENE --- */
-        #main-scene {
-            background: radial-gradient(circle at center, #0f0f1a 0%, #050509 100%);
-            overflow-y: auto;
-            padding: 40px 20px;
-            display: block; /* Flex centering override for scrolling */
-        }
-
-        .main-content-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Glassmorphism Card */
-        .glass-card {
-            background: var(--ガラス);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-ガラス);
-            border-radius: 30px;
-            padding: 40px;
-            width: 100%;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            opacity: 0;
-            transform: translateY(50px);
-            animation: slideUpFade 1s forwards;
-        }
-
-        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0); } }
-
-        .headline {
-            font-family: var(--font-heading);
-            font-size: 4rem;
-            text-align: center;
-            background: linear-gradient(to right, #fff, #ffd700, #fff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            line-height: 1.1;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .subline {
-            font-family: var(--font-heading);
-            font-size: 2rem;
-            text-align: center;
-            color: var(--text-main);
-            margin-bottom: 30px;
-            font-weight: 300;
-        }
-
-        /* Birthday Letter */
-        .letter-content {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-
-        .letter-content p { margin-bottom: 20px; }
-        .highlight { color: var(--accent); font-weight: 600; }
-
-        /* Cake Section */
-        .cake-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 40px 0;
-        }
-
-        /* Improved CSS Cake */
-        .cake {
-            position: relative;
-            width: 150px;
-            height: 100px;
-            background: #ffeaa7;
-            border-radius: 10px 10px 0 0;
-            box-shadow: 0 20px 0 rgba(0,0,0,0.1);
-            margin-bottom: 50px;
-        }
-        .cake::after {
-            content: ''; position: absolute; top: 50%; left: 0;
-            width: 100%; height: 20px; background: #ff7675;
-        }
-        .cake::before {
-            content: ''; position: absolute; bottom: -10px; left: 50%;
-            transform: translateX(-50%);
-            width: 160px; height: 20px; background: #fab1a0; border-radius: 0 0 10px 10px;
-        }
-
-        .candle {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 10px;
-            height: 40px;
-            background: #74b9ff;
-            border-radius: 5px;
-        }
-
-        .flame {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 12px;
-            height: 20px;
-            background: #ff9f43;
-            border-radius: 50% 50% 20% 20%;
-            box-shadow: 0 0 15px #ff9f43, 0 0 30px #ff5e57;
-            animation: flicker 0.5s infinite alternate;
-        }
-
-        @keyframes flicker { 0% { height: 18px; opacity: 0.8; } 100% { height: 20px; opacity: 1; } }
-
-        /* Countdown */
-        .countdown-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .countdown-box {
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 15px;
-            min-width: 80px;
-            text-align: center;
-            border: 1
+    <script src="script.js"></script>
+</body>
+</html>
